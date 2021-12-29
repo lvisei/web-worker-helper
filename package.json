@@ -1,0 +1,50 @@
+{
+  "name": "web-worker-helper",
+  "version": "0.0.1",
+  "description": "Utilities for running tasks on worker threads",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liuvigongzuoshi/web-worker-helper"
+  },
+  "keywords": [
+    "worker",
+    "process",
+    "thread"
+  ],
+  "types": "src/index.ts",
+  "main": "dist/es5/index.js",
+  "module": "dist/esm/index.js",
+  "sideEffects": false,
+  "files": [
+    "src",
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "prepare": "husky install",
+    "lint": "eslint src __tests__ --ext .js,.ts",
+    "lint-fix": "eslint src __tests__ --ext .js,.ts --fix",
+    "prettier": "prettier src __tests__ -c -w",
+    "typedoc": "typedoc",
+    "clean": "rimraf dist",
+    "build-bundle": "webpack --config ./scripts/webpack/bundle.ts",
+    "build-workers": "webpack --entry ./src/workers/null-worker.ts --output ./dist/null-worker.js --env.dev --config ./scripts/webpack/worker.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.0",
+    "lint-staged": "^11.2.3",
+    "prettier": "^2.4.1",
+    "rimraf": "^3.0.2",
+    "tape": "^5.3.1",
+    "tape-promise": "^4.0.0",
+    "typedoc": "^0.22.5",
+    "typescript": "^4.4.3"
+  }
+}

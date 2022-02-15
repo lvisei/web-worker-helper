@@ -2,7 +2,7 @@
 
 > Forked from [@loaders.gl/worker-utils](https://github.com/visgl/loaders.gl/blob/master/modules/worker-utils/README.md) refactoring
 
-## 耗时任务
+## Time consuming task
 
 ```ts
 // fibonacci.js
@@ -19,7 +19,7 @@ export function fibonacci(n: number) {
 }
 ```
 
-## 创建耗时任务的 worker
+## Creating workers for time-consuming task
 
 ```ts
 // fibonacci.worker.js
@@ -32,11 +32,11 @@ createWorker(async (data: number, options?: Record<string, any>) => {
 });
 ```
 
-## 打包 worker 文件为 umd
+## Bundle worker
 
-## 主线程调用 worker
+## Main thread call worker
 
-1. 解析 worker
+1. parse worker
 
 ```ts
 import { getWorkerURL, WorkerFarm } from "17-worker";
@@ -54,7 +54,7 @@ export async function parseWorker(workerName: string, data: any, options?: Recor
   return result.result;
 ```
 
-2. 调用耗时任务
+2. Call time-consuming task
 
 ```ts
 import { parseWorker } from '17-worker';

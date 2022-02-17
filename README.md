@@ -43,9 +43,10 @@ import { getWorkerURL, WorkerFarm } from "17-worker";
 
 export async function parseWorker(workerName: string, data: any, options?: Record<string, any> ) {
   const url = getWorkerURL (workerName, options);
+  // const source = `codeString`
   const workerFarm = WorkerFarm.getWorkerFarm({ maxConcurrency: 3, reuseWorkers: true });
   const workerPool = workerFarm.getWorkerPool({ name: workerName, url })
-  // const workerPool = workerController.getWorkerPool({ name: workerName, url });
+  // const workerPool = workerFarm.getWorkerPool({ name: workerName, source });
   const job = await workerPool.startJob(workerName, (job, type, data) => job.done(data));
 
   job.postMessage('process', { input: data })

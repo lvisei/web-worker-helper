@@ -1,6 +1,6 @@
 # web-worker-helper
 
-> Forked from [@loaders.gl/worker-utils](https://github.com/visgl/loaders.gl/blob/master/modules/worker-utils/README.md) refactoring
+> Forked from [@loaders.gl/worker-utils](https://github.com/visgl/loaders.gl/blob/master/modules/worker-utils/README.md) implementation
 
 ## Time consuming task
 

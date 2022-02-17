@@ -1,3 +1,5 @@
+export const version = '0.0.2';
+
 import type { WorkerObject } from './types';
 
 // TYPES
@@ -42,8 +44,6 @@ export { default as AsyncQueue } from './async-queue/async-queue';
 export const NullWorker: WorkerObject = {
   id: 'null',
   name: 'null',
-  module: 'worker-utils',
-  options: {
-    null: {},
-  },
+  module: 'web-worker-helper',
+  options: {},
 };

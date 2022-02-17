@@ -19,10 +19,10 @@ export default [
     plugins: [typescript()],
   },
   {
-    input: 'src/workers/null-worker.ts',
+    input: 'src/workers/null.worker.ts',
     output: [
       {
-        file: 'dist/null-worker.js',
+        file: 'dist/null.worker.js',
         format: 'iife',
         sourcemap: true,
       },

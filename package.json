@@ -1,11 +1,11 @@
 {
   "name": "web-worker-helper",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Utilities for running tasks on worker threads",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/liuvigongzuoshi/web-worker-helper"
+    "url": "https://github.com/lvisei/web-worker-helper"
   },
   "keywords": [
     "worker",
@@ -16,7 +16,7 @@
   "types": "dist/lib/index.d.ts",
   "module": "dist/esm/index.js",
   "unpkg": "dist/umd/web-worker-helper.js",
-  "sideEffects": false,
+  "sideEffects": true,
   "files": [
     "src",
     "dist",

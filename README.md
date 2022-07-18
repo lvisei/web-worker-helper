@@ -26,7 +26,7 @@ export function fibonacci(n: number) {
 import { createWorker } from 'web-worker-helper';
 import { fibonacci } from './fibonacci';
 
-createWorker(async (data: number, options?: Record<string, any>) => {
+createWorker(async (data: number) => {
   const result = fibonacci(data);
   return result;
 });
@@ -39,26 +39,34 @@ createWorker(async (data: number, options?: Record<string, any>) => {
 1. parse worker
 
 ```ts
-import { getWorkerURL, WorkerFarm } from "17-worker";
+import { WorkerFarm } from 'web-worker-helper';
 
-export async function parseWorker(workerName: string, data: any, options?: Record<string, any> ) {
-  const url = getWorkerURL (workerName, options);
-  // const source = `codeString`
-  const workerFarm = WorkerFarm.getWorkerFarm({ maxConcurrency: 3, reuseWorkers: true });
-  const workerPool = workerFarm.getWorkerPool({ name: workerName, url })
+export async function parseWorker(
+  workerName: string,
+  data: any,
+  options?: Record<string, any> = { maxConcurrency: 3, reuseWorkers: true }
+) {
+  const url = getWorkerURL({ name: workerName });
+  // const source = `fibonacci codeString`
+  const workerFarm = WorkerFarm.getWorkerFarm({
+    maxConcurrency: options.maxConcurrency,
+    reuseWorkers: options.reuseWorkers,
+  });
+  const workerPool = workerFarm.getWorkerPool({ name: workerName, url });
   // const workerPool = workerFarm.getWorkerPool({ name: workerName, source });
   const job = await workerPool.startJob(workerName, (job, type, data) => job.done(data));
 
-  job.postMessage('process', { input: data })
+  job.postMessage('process', { input: data });
 
   const result = await job.result;
   return result.result;
+}
 ```
 
 2. Call time-consuming task
 
 ```ts
-import { parseWorker } from '17-worker';
+import { parseWorker } from './parse-worker';
 import { fibonacci } from './fibonacci';
 
 export async function starFibonacci(iskorker, data) {

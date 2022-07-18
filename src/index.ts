@@ -1,4 +1,4 @@
-export const version = '0.0.2';
+export const version = '0.0.3';
 
 import type { WorkerObject } from './types';
 

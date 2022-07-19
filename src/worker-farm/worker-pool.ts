@@ -68,7 +68,7 @@ export default class WorkerPool {
   }
 
   public setProps(props: WorkerPoolProps) {
-    this.props = { ...this.props, ...props };
+    this.props = Object.assign({}, this.props, props);
 
     if (props.name !== undefined) {
       this.name = props.name;

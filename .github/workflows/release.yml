@@ -46,9 +46,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:
-          publish: |
-            pnpm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
-            pnpm publish-package
+          publish: pnpm publish-package
           createGithubReleases: true
 
   # 发布成功

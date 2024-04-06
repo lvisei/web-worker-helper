@@ -17,12 +17,11 @@ jobs:
     steps:
       - run: echo "This PR was pull_request_review"
   approved3:
-    if: github.event.pull_request.user == 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
-      - run: echo "This PR was github-actions[bot]"
+      - run: echo "::debug::${{github.event}}"
   approved4:
-    if: startswith(github.event.pull_request.head.ref, 'changeset-release/')
+    if: startswith(github.event.pull_request.state, 'changeset-release/')
     runs-on: ubuntu-latest
     steps:
       - run: echo "This PR startswith changeset-release/"
@@ -31,7 +30,7 @@ jobs:
     # created version approved PR by changesets bot or manual dispatch
     if: |
       github.event_name == 'pull_request_review' &&
-      github.event.pull_request.user == 'github-actions[bot]' &&
+      github.event.pull_request.user.type == 'Bot' &&
       startswith(github.event.pull_request.head.ref, 'changeset-release/') &&
       github.event.review.state == 'APPROVED' ||
       github.event_name == 'workflow_dispatch'

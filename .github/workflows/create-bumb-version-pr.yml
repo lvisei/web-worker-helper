@@ -32,5 +32,6 @@ jobs:
           commit: 'chore: version'
           title: 'chore: version'
           setupGitUser: true
+          createGithubReleases: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

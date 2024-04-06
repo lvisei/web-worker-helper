@@ -28,7 +28,7 @@ jobs:
       - name: Create Pull Request
         uses: changesets/action@v1
         with:
-          version: changeset version
+          version: pnpm publish-version
           commit: 'chore: version'
           title: 'chore: version'
           setupGitUser: 'github-actions[changeset]'

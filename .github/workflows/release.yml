@@ -9,7 +9,7 @@ jobs:
   release:
     # created chore: bump version PR by changesets bot
     if: |
-      github.event.pull_request.user == 'github-actions[changeset]' &&
+      github.event.pull_request.user == 'github-actions[bot]' &&
       github.event.pull_request.title == 'chore: version' &&
       github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest

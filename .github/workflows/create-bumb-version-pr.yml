@@ -31,6 +31,6 @@ jobs:
           version: pnpm publish-version
           commit: 'chore: version'
           title: 'chore: version'
-          setupGitUser: 'github-actions[changeset]'
+          setupGitUser: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

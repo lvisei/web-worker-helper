@@ -1,0 +1,91 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  release:
+    # created chore: bump version PR by changesets bot
+    if: |
+      github.event.pull_request.user == 'github-actions[changeset]' &&
+      github.event.pull_request.title == 'chore: version' &&
+      github.event.review.state == 'APPROVED'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    outputs:
+      published: ${{ steps.changesets.outputs.published }}
+      publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        uses: ./.github/actions/prepare-install
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # 发布开始
+      - name: Release start comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: 1
+          body: |
+            Publishing
+          reactions: 'eyes'
+
+      - name: Release NPM and Github
+        id: changesets
+        uses: changesets/action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        with:
+          publish: |
+            pnpm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
+            pnpm publish-package
+          createGithubReleases: true
+
+  # 发布成功
+  release-succeeded:
+    needs: release
+    if: needs.release.outputs.published == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release succeeded comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: 1
+          body: |
+            Released to successful 🎉
+
+            - Released [NPM][1]
+            - Released [Github][2]
+
+            `${{ needs.release.outputs.publishedPackages }}`
+
+            [1]: https://www.npmjs.com/package/web-worker-helper?activeTab=versions
+            [2]: https://github.com/lvisei/web-worker-helper/releases
+          reactions: 'rocket'
+
+      - name: automerge
+        uses: 'pascalgn/automerge-action@v0.16.2'
+        env:
+          MERGE_METHOD: 'squash'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # 发布失败
+  release-failed:
+    needs: release
+    if: needs.release.outputs.published != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release failed comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: 1
+          body: |
+            Release failed
+          reactions: 'eyes'

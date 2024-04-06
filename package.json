@@ -35,7 +35,7 @@
     "build:umd": "rollup -c scripts/rollup.config.ts",
     "changeset": "changeset add",
     "publish-version": "changeset version",
-    "publish-packages": "pnpm build && changeset publish"
+    "publish-package": "pnpm build && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",

@@ -7,11 +7,13 @@ on:
 
 jobs:
   release:
-    # created chore: bump version PR by changesets bot
+    # created version approved PR by changesets bot or manual dispatch
     if: |
+      github.event_name == 'pull_request_review' &&
       github.event.pull_request.user == 'github-actions[bot]' &&
       startswith(github.event.pull_request.head.ref, 'changeset-release/') &&
-      github.event.review.state == 'APPROVED'
+      github.event.review.state == 'APPROVED' ||
+      github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     strategy:
       matrix:

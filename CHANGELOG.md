@@ -1,5 +1,11 @@
 # web-worker-helper
 
+## 0.0.4-beta.1
+
+### Patch Changes
+
+- [`f6eefae`](https://github.com/lvisei/web-worker-helper/commit/f6eefaec7e4e85a18ccabaa628f48446f409e72c) Thanks [@lvisei](https://github.com/lvisei)! - fix: tool
+
 ## 0.0.4-beta.0
 
 ### Patch Changes

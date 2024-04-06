@@ -7,11 +7,13 @@ on:
 
 jobs:
   release:
-    # created chore: bump version PR by changesets bot
+    # created version approved PR by changesets bot or manual dispatch
     if: |
-      github.event.pull_request.user == 'github-actions[bot]' &&
+      github.event_name == 'pull_request_review' &&
+      github.event.pull_request.user.type == 'Bot' &&
       startswith(github.event.pull_request.head.ref, 'changeset-release/') &&
-      github.event.review.state == 'APPROVED'
+      github.event.review.state == 'APPROVED' ||
+      github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -19,6 +21,7 @@ jobs:
     outputs:
       published: ${{ steps.changesets.outputs.published }}
       publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
+      hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
 
     steps:
       - uses: actions/checkout@v4
@@ -29,12 +32,12 @@ jobs:
 
       # 发布开始
       - name: Release start comment
+        if: github.event_name == 'pull_request_review'
         uses: peter-evans/create-or-update-comment@v4
         with:
-          issue-number: 1
+          issue-number: ${{ github.event.pull_request.number }}
           body: |
             Publishing
-          reactions: 'eyes'
 
       - name: Release NPM and Github
         id: changesets
@@ -43,9 +46,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:
-          publish: |
-            pnpm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
-            pnpm publish-package
+          publish: pnpm publish-package
           createGithubReleases: true
 
   # 发布成功
@@ -55,9 +56,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Release succeeded comment
+        if: github.event_name == 'pull_request_review'
         uses: peter-evans/create-or-update-comment@v4
         with:
-          issue-number: 1
+          issue-number: ${{ github.event.pull_request.number }}
           body: |
             Released to successful 🎉
 
@@ -83,9 +85,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Release failed comment
+        if: github.event_name == 'pull_request_review'
         uses: peter-evans/create-or-update-comment@v4
         with:
-          issue-number: 1
+          issue-number: ${{ github.event.pull_request.number }}
           body: |
             Release failed
-          reactions: 'eyes'
+      - name: No changesets
+        if: needs.release.outputs.hasChangesets == 'false'
+        run: |
+          echo "::error title=No changesets found::All changesets are empty, not creating PR, please add changeset"
+          exit 1
+      - name: Released failed
+        if: needs.release.outputs.hasChangesets == 'true'
+        run: |
+          echo "::error title=Publish failed::Released NPM or Github failed"
+          exit 1

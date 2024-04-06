@@ -4,5 +4,5 @@
   "initialVersions": {
     "web-worker-helper": "0.0.3"
   },
-  "changesets": []
+  "changesets": ["brown-suits-smoke"]
 }

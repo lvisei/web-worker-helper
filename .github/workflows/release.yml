@@ -32,12 +32,12 @@ jobs:
 
       # 发布开始
       - name: Release start comment
+        if: github.event_name == 'pull_request_review'
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             Publishing
-          reactions: 'eyes'
 
       - name: Release NPM and Github
         id: changesets
@@ -58,6 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Release succeeded comment
+        if: github.event_name == 'pull_request_review'
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
@@ -86,12 +87,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Release failed comment
+        if: github.event_name == 'pull_request_review'
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             Release failed
-          reactions: 'eyes'
       - name: No changesets
         if: needs.release.outputs.hasChangesets == 'false'
         run: |

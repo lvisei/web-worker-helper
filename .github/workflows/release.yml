@@ -6,6 +6,27 @@ on:
     types: [submitted]
 
 jobs:
+  approved1:
+    if: github.event.review.state == 'APPROVED'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This PR was approved"
+  approved2:
+    if: github.event_name == 'pull_request_review'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This PR was pull_request_review"
+  approved3:
+    if: github.event.pull_request.user == 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This PR was github-actions[bot]"
+  approved4:
+    if: startswith(github.event.pull_request.head.ref, 'changeset-release/')
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This PR startswith changeset-release/"
+
   release:
     # created version approved PR by changesets bot or manual dispatch
     if: |

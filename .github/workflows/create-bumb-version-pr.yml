@@ -25,7 +25,8 @@ jobs:
       - name: Pre build ckeck
         run: pnpm build
 
-      - name: Create Pull Request
+      - name: Create Version Pull Request
+        id: changesets
         uses: changesets/action@v1
         with:
           version: pnpm publish-version
@@ -35,3 +36,14 @@ jobs:
           createGithubReleases: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: No changesets
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          echo "::error title=No changesets found::All changesets are empty, not creating PR, please add changeset"
+          exit 1
+
+      - name: Created Pull Request
+        if: steps.changesets.outputs.hasChangesets == 'true'
+        run: |
+          echo "::notice title=PR is created::Created bump version PR address is: https://github.com/${{github.repository}}/pull/${{steps.changesets.outputs.pullRequestNumber}}"

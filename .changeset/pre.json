@@ -1,0 +1,8 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "web-worker-helper": "0.0.3"
+  },
+  "changesets": []
+}

@@ -6,26 +6,6 @@ on:
     types: [submitted]
 
 jobs:
-  approved1:
-    if: github.event.review.state == 'APPROVED'
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "This PR was approved"
-  approved2:
-    if: github.event_name == 'pull_request_review'
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "This PR was pull_request_review"
-  approved3:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "::debug::${{github.event}}"
-  approved4:
-    if: startswith(github.event.pull_request.state, 'changeset-release/')
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "This PR startswith changeset-release/"
-
   release:
     # created version approved PR by changesets bot or manual dispatch
     if: |
@@ -41,6 +21,7 @@ jobs:
     outputs:
       published: ${{ steps.changesets.outputs.published }}
       publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
+      hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
 
     steps:
       - uses: actions/checkout@v4
@@ -53,7 +34,7 @@ jobs:
       - name: Release start comment
         uses: peter-evans/create-or-update-comment@v4
         with:
-          issue-number: 1
+          issue-number: ${{ github.event.pull_request.number }}
           body: |
             Publishing
           reactions: 'eyes'
@@ -79,7 +60,7 @@ jobs:
       - name: Release succeeded comment
         uses: peter-evans/create-or-update-comment@v4
         with:
-          issue-number: 1
+          issue-number: ${{ github.event.pull_request.number }}
           body: |
             Released to successful 🎉
 
@@ -107,7 +88,17 @@ jobs:
       - name: Release failed comment
         uses: peter-evans/create-or-update-comment@v4
         with:
-          issue-number: 1
+          issue-number: ${{ github.event.pull_request.number }}
           body: |
             Release failed
           reactions: 'eyes'
+      - name: No changesets
+        if: needs.release.outputs.hasChangesets == 'false'
+        run: |
+          echo "::error title=No changesets found::All changesets are empty, not creating PR, please add changeset"
+          exit 1
+      - name: Released failed
+        if: needs.release.outputs.hasChangesets == 'true'
+        run: |
+          echo "::error title=Publish failed::Released NPM or Github failed"
+          exit 1

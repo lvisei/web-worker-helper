@@ -1,5 +1,11 @@
 # web-worker-helper
 
+## 0.0.4-beta.3
+
+### Patch Changes
+
+- [`4314f01`](https://github.com/lvisei/web-worker-helper/commit/4314f012b68a94082f270fee9df4b18c9007140f) Thanks [@lvisei](https://github.com/lvisei)! - chore: auto
+
 ## 0.0.4-beta.2
 
 ### Patch Changes

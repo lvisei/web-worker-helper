@@ -4,5 +4,5 @@
   "initialVersions": {
     "web-worker-helper": "0.0.3"
   },
-  "changesets": ["brown-suits-smoke", "itchy-wolves-occur"]
+  "changesets": ["brown-suits-smoke", "itchy-wolves-occur", "slimy-bottles-warn"]
 }

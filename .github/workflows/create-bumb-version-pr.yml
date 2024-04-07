@@ -37,13 +37,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: No changesets
-        if: steps.changesets.outputs.hasChangesets == 'false'
+      - name: After changesets
         run: |
-          echo "::error title=No changesets found::All changesets are empty, not creating PR, please add changeset"
-          exit 1
-
-      - name: Created Pull Request
-        if: steps.changesets.outputs.hasChangesets == 'true'
-        run: |
-          echo "::notice title=PR is created::Created bump version PR address is: https://github.com/${{github.repository}}/pull/${{steps.changesets.outputs.pullRequestNumber}}"
+          if [[ ${{ steps.changesets.outputs.hasChangesets }} == false ]]; then
+            # No changesets
+            echo "::error title=No changesets found::All changesets are empty, not creating PR, please add changeset"
+            exit 1
+          else
+            # Created Pull Request
+            echo "::notice title=PR is created::Created bump version PR address is: https://github.com/${{github.repository}}/pull/${{steps.changesets.outputs.pullRequestNumber}}"
+          fi

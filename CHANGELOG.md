@@ -1,5 +1,11 @@
 # web-worker-helper
 
+## 0.0.4-beta.4
+
+### Patch Changes
+
+- [`8f15dff`](https://github.com/lvisei/web-worker-helper/commit/8f15dffcdde222d7a01feb6675c09f484d870b5c) Thanks [@lvisei](https://github.com/lvisei)! - chore: mess
+
 ## 0.0.4-beta.3
 
 ### Patch Changes

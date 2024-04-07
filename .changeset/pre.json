@@ -4,5 +4,11 @@
   "initialVersions": {
     "web-worker-helper": "0.0.3"
   },
-  "changesets": ["brown-suits-smoke", "itchy-wolves-occur", "silent-ads-dance", "slimy-bottles-warn"]
+  "changesets": [
+    "brown-suits-smoke",
+    "itchy-wolves-occur",
+    "silent-ads-dance",
+    "slimy-bottles-warn",
+    "swift-readers-watch"
+  ]
 }

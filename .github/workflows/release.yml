@@ -9,10 +9,12 @@ jobs:
   release:
     # created version approved PR by changesets bot or manual dispatch
     if: |
-      github.event_name == 'pull_request_review' &&
-      github.event.pull_request.user.type == 'Bot' &&
-      startswith(github.event.pull_request.head.ref, 'changeset-release/') &&
-      github.event.review.state == 'APPROVED' ||
+      (
+        github.event_name == 'pull_request_review' &&
+        github.event.pull_request.user.type == 'Bot' &&
+        startswith(github.event.pull_request.head.ref, 'changeset-release/') &&
+        github.event.review.state == 'APPROVED'
+      ) ||
       github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     strategy:
@@ -30,7 +32,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # 发布开始
+      # release start notify
       - name: Release start comment
         if: github.event_name == 'pull_request_review'
         uses: peter-evans/create-or-update-comment@v4
@@ -94,13 +96,14 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             Release failed
-      - name: No changesets
-        if: needs.release.outputs.hasChangesets == 'false'
+
+      - name: Released err message
         run: |
-          echo "::error title=No changesets found::All changesets are empty, not creating PR, please add changeset"
-          exit 1
-      - name: Released failed
-        if: needs.release.outputs.hasChangesets == 'true'
-        run: |
-          echo "::error title=Publish failed::Released NPM or Github failed"
+          if [[ ${{ needs.release.outputs.hasChangesets }} == 'false' ]]; then
+            # No changesets
+            echo "::error title=No changesets found::All changesets are empty, not creating PR, please add changeset"
+          else
+            # Released failed
+            echo "::error title=Publish failed::Released NPM or Github failed"
+          fi
           exit 1
